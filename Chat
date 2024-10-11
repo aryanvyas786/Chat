@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { registerUser, getAgencies } from '../api'; // Updated import
-// Rest of the imports
+import { registerUser, getAgencies } from '../api'; // Adjust the path as necessary
+import { useNavigate } from 'react-router-dom';
 
 const RegisterForm = () => {
     const [message, setMessage] = useState('');
     const [agencies, setAgencies] = useState<any[]>([]);
     const [loadingAgencies, setLoadingAgencies] = useState(true);
+    const navigate = useNavigate(); // Initialize the useNavigate hook
 
     useEffect(() => {
         const fetchAgencies = async () => {
@@ -15,7 +16,7 @@ const RegisterForm = () => {
                 const response = await getAgencies();
                 setAgencies(response.data);
             } catch (error) {
-                console.error('Error fetching agencies', error);
+                console.error('Error fetching agencies:', error);
             } finally {
                 setLoadingAgencies(false);
             }
@@ -72,6 +73,9 @@ const RegisterForm = () => {
                 await registerUser(formData);
                 setMessage('Registration successful! Check your email for details.');
                 formik.resetForm(); // Reset the form after successful submission
+                
+                // Navigate to the login page or any other page
+                navigate('/login'); // Adjust the path based on your routing setup
             } catch (error) {
                 setMessage('Registration failed. Please try again.');
             }
@@ -199,8 +203,7 @@ const RegisterForm = () => {
                                 ))}
                             </select>
                         )}
-                        {formik.touched.agencyId && formik.errors.agencyId ? <div>{formik.errors.agencyId}</div> :
-{formik.touched.agencyId && formik.errors.agencyId ? <div>{formik.errors.agencyId}</div> : null}
+                        {formik.touched.agencyId && formik.errors.agencyId ? <div>{formik.errors.agencyId}</div> : null}
                     </div>
                 </>
             )}
